@@ -355,6 +355,7 @@ public class ControllerImpl implements CS355Controller, MouseMotionListener, Mou
         final List<Square> handles = line.getHandles();
         for(int i = 0; i < handles.size(); i++) {
             if(handles.get(i).isClickInHandle(line, point)) {
+                //Returns the index of the handle
                 return i + 1;
             }
         }
@@ -435,6 +436,8 @@ public class ControllerImpl implements CS355Controller, MouseMotionListener, Mou
     }
 
     public void moveLineEndpoint(int whichHandle, final Point point) {
-        model.moveSelectedLineEndpoint(whichHandle, point);
+        final Point2D newPoint = Helper.viewToWorld(point);
+
+        model.moveSelectedLineEndpoint(whichHandle, newPoint);
     }
 }
