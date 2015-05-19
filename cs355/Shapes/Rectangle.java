@@ -60,9 +60,7 @@ public class Rectangle extends Shape {
 
     @Override
     public boolean isClickInShape(Point2D click) {
-        AffineTransform transform = Helper.viewToObject(this);
-        Point2D newClick = new Point2D.Double();
-        transform.transform(click, newClick);
+        Point2D newClick = Helper.viewToObject(this, click);
 
         if(Math.abs(newClick.getX()) <= width / 2 && Math.abs(newClick.getY()) <= height / 2) {
             return true;

@@ -48,9 +48,7 @@ public class Circle extends Shape {
 
     @Override
     public boolean isClickInShape(Point2D click) {
-        AffineTransform transform = Helper.viewToObject(this);
-        Point2D newClick = new Point2D.Double();
-        transform.transform(click, newClick);
+        Point2D newClick = Helper.viewToObject(this, click);
 
         if(Math.pow(newClick.getX(), 2) + Math.pow(newClick.getY(), 2) <= Math.pow(radius, 2)) {
             return true;

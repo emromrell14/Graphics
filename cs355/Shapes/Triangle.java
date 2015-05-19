@@ -78,9 +78,7 @@ public class Triangle extends Shape {
 
     @Override
     public boolean isClickInShape(Point2D click) {
-        AffineTransform transform = Helper.viewToObject(this);
-        Point2D newClick = new Point2D.Double();
-        transform.transform(click, newClick);
+        Point2D newClick = Helper.viewToObject(this, click);
 
         double a = new Vector(newClick, point1).dot(new Vector(point2, point1).getPerpendicular());
         double b = new Vector(newClick, point2).dot(new Vector(point3, point2).getPerpendicular());

@@ -57,9 +57,8 @@ public class Line extends Shape {
 
     @Override
     public boolean isClickInShape(Point2D click) {
-        final AffineTransform transform = Helper.viewToWorld();
-        Point2D newClick = new Point2D.Double();
-        transform.transform(click, newClick);
+        Point2D newClick = Helper.viewToWorld(click);
+
         double distance = getDistanceFromLine(newClick);
         return distance <= 4 * Helper.screenScale;
     }
