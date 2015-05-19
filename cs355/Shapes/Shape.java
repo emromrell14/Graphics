@@ -12,8 +12,12 @@ import java.awt.geom.Point2D;
  * Created by eric on 4/29/15.
  */
 public abstract class Shape {
-    public static final int HANDLE_DISPLACEMENT = 5;
-    public static final int HANDLE_WIDTH = 6;
+    public static int HANDLE_DISPLACEMENT() {
+        return (int) (4 * Helper.screenScale);
+    }
+    public static int HANDLE_WIDTH() {
+        return (int) (8 * Helper.screenScale);
+    }
 
     private Color color;
     private Point2D center;

@@ -50,8 +50,8 @@ public class Line extends Shape {
 
     @Override
     public List<Square> getHandles() {
-        final Square handle1 = new Square(null, point1, HANDLE_WIDTH);
-        final Square handle2 = new Square(null, point2, HANDLE_WIDTH);
+        final Square handle1 = new Square(null, point1, HANDLE_WIDTH());
+        final Square handle2 = new Square(null, point2, HANDLE_WIDTH());
         return Arrays.asList(handle1, handle2);
     }
 

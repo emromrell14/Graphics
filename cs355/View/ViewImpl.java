@@ -78,7 +78,7 @@ public class ViewImpl implements ViewRefresher, Observer {
 
         if(model.getSelectedShape() == line) {
             for (Square handle : line.getHandles()) {
-                g2d.drawRect((int) handle.calculateTopLeftCorner().getX() - Shape.HANDLE_WIDTH / 2, (int) handle.calculateTopLeftCorner().getY() - Shape.HANDLE_WIDTH / 2, Shape.HANDLE_WIDTH, Shape.HANDLE_WIDTH);
+                g2d.drawRect((int) handle.calculateTopLeftCorner().getX() - Shape.HANDLE_WIDTH() / 2, (int) handle.calculateTopLeftCorner().getY() - Shape.HANDLE_WIDTH() / 2, Shape.HANDLE_WIDTH(), Shape.HANDLE_WIDTH());
             }
         }
     }
@@ -98,7 +98,7 @@ public class ViewImpl implements ViewRefresher, Observer {
             final Vector displacement = square.getHandleDisplacement();
             transform.translate(displacement.get(0), displacement.get(1));
             g2d.setTransform(transform);
-            g2d.drawRect(0, 0, Shape.HANDLE_WIDTH, Shape.HANDLE_WIDTH);
+            g2d.drawRect(0, 0, Shape.HANDLE_WIDTH(), Shape.HANDLE_WIDTH());
         } else {
             g2d.fillRect(-halfWidth, -halfWidth, (int) square.getWidth(), (int) square.getWidth());
         }
@@ -120,7 +120,7 @@ public class ViewImpl implements ViewRefresher, Observer {
             final Vector displacement = rectangle.getHandleDisplacement();
             transform.translate(displacement.get(0), displacement.get(1));
             g2d.setTransform(transform);
-            g2d.drawRect(0, 0, Shape.HANDLE_WIDTH, Shape.HANDLE_WIDTH);
+            g2d.drawRect(0, 0, (int) (Shape.HANDLE_WIDTH() * Helper.screenScale), (int) (Shape.HANDLE_WIDTH() * Helper.screenScale));
         } else {
             g2d.fillRect(-halfWidth, -halfHeight, (int) rectangle.getWidth(), (int) rectangle.getHeight());
         }
@@ -155,7 +155,7 @@ public class ViewImpl implements ViewRefresher, Observer {
             final Vector displacement = ellipse.getHandleDisplacement();
             transform.translate(displacement.get(0), displacement.get(1));
             g2d.setTransform(transform);
-            g2d.drawRect(0, 0, Shape.HANDLE_WIDTH, Shape.HANDLE_WIDTH);
+            g2d.drawRect(0, 0, Shape.HANDLE_WIDTH(), Shape.HANDLE_WIDTH());
         } else {
             g2d.fillOval(-halfWidth, -halfHeight, (int) ellipse.getWidth(), (int) ellipse.getHeight());
         }
@@ -183,7 +183,7 @@ public class ViewImpl implements ViewRefresher, Observer {
             final Vector displacement = triangle.getHandleDisplacement();
             transform.translate(displacement.get(0), displacement.get(1));
             g2d.setTransform(transform);
-            g2d.drawRect(0, 0, Shape.HANDLE_WIDTH, Shape.HANDLE_WIDTH);
+            g2d.drawRect(0, 0, Shape.HANDLE_WIDTH(), Shape.HANDLE_WIDTH());
         } else {
             g2d.fillPolygon(xPoints, yPoints, 3);
         }

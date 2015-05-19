@@ -64,14 +64,14 @@ public class Triangle extends Shape {
 
     @Override
     public Vector getHandleDisplacement() {
-        return new Vector(- HANDLE_WIDTH / 2, this.getHalfHeight() + HANDLE_DISPLACEMENT + HANDLE_WIDTH / 2);
+        return new Vector(- HANDLE_WIDTH() * Helper.screenScale / 2, this.getHalfHeight() + HANDLE_DISPLACEMENT() + HANDLE_WIDTH() * Helper.screenScale / 2);
     }
 
     @Override
     public List<Square> getHandles() {
         final Vector displacement = this.getHandleDisplacement();
         final Point2D origin = new Point2D.Double(this.getCenter().getX() + displacement.get(0), this.getCenter().getY() + displacement.get(1));
-        final Square handle = new Square(null, origin, HANDLE_WIDTH);
+        final Square handle = new Square(null, origin, HANDLE_WIDTH() * Helper.screenScale);
         handle.setRotationAngle(this.getRotationAngle());
         return Arrays.asList(handle);
     }

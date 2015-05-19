@@ -41,7 +41,7 @@ public class Square extends Shape {
             AffineTransform transform = Helper.worldToObject(parent);
             transform.transform(click, click);
 
-            click.setLocation(0, click.getY() - parent.getHandleDisplacement().get(1) - Shape.HANDLE_WIDTH / 2);
+            click.setLocation(0, click.getY() - parent.getHandleDisplacement().get(1) - Shape.HANDLE_WIDTH() / 2);
 
             if(Math.abs(click.getX()) <= width && Math.abs(click.getY()) <= width) {
                 return true;
@@ -57,14 +57,14 @@ public class Square extends Shape {
 
     @Override
     public Vector getHandleDisplacement() {
-        return new Vector(- HANDLE_WIDTH / 2, this.width / 2 + HANDLE_DISPLACEMENT + HANDLE_WIDTH / 2);
+        return new Vector(- HANDLE_WIDTH() / 2, this.width / 2 + HANDLE_DISPLACEMENT() + HANDLE_WIDTH() / 2);
     }
 
     @Override
     public List<Square> getHandles() {
         final Vector displacement = this.getHandleDisplacement();
         final Point2D.Double origin = new Point2D.Double(this.getCenter().getX() + displacement.get(0), this.getCenter().getY() + displacement.get(1));
-        final Square handle = new Square(null, origin, HANDLE_WIDTH);
+        final Square handle = new Square(null, origin, HANDLE_WIDTH());
         handle.setRotationAngle(this.getRotationAngle());
         return Arrays.asList(handle);
     }
