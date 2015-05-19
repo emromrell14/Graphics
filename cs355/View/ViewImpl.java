@@ -120,7 +120,7 @@ public class ViewImpl implements ViewRefresher, Observer {
             final Vector displacement = rectangle.getHandleDisplacement();
             transform.translate(displacement.get(0), displacement.get(1));
             g2d.setTransform(transform);
-            g2d.drawRect(0, 0, (int) (Shape.HANDLE_WIDTH() * Helper.screenScale), (int) (Shape.HANDLE_WIDTH() * Helper.screenScale));
+            g2d.drawRect(0, 0, Shape.HANDLE_WIDTH(), Shape.HANDLE_WIDTH());
         } else {
             g2d.fillRect(-halfWidth, -halfHeight, (int) rectangle.getWidth(), (int) rectangle.getHeight());
         }
