@@ -365,6 +365,9 @@ public class ControllerImpl implements CS355Controller, MouseMotionListener, Mou
     }
 
     public void moveShape(double deltaX, double deltaY) {
+        deltaX *= Helper.screenScale;
+        deltaY *= Helper.screenScale;
+
         model.getSelectedShape().moveCenter(deltaX, deltaY);
         model.updateScreen();
     }
