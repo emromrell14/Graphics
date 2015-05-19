@@ -72,9 +72,10 @@ public class Square extends Shape {
     @Override
     public boolean isClickInShape(Point2D click) {
         AffineTransform transform = Helper.viewToObject(this);
-        transform.transform(click, click);
+        Point2D newClick = new Point2D.Double();
+        transform.transform(click, newClick);
 
-        if(Math.abs(click.getX()) <= width / 2 && Math.abs(click.getY()) <= width / 2) {
+        if(Math.abs(newClick.getX()) <= width / 2 && Math.abs(newClick.getY()) <= width / 2) {
             return true;
         }
         return false;

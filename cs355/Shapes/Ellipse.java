@@ -62,9 +62,10 @@ public class Ellipse extends Shape {
     @Override
     public boolean isClickInShape(Point2D click) {
         AffineTransform transform = Helper.viewToObject(this);
-        transform.transform(click, click);
+        Point2D newClick = new Point2D.Double();
+        transform.transform(click, newClick);
 
-        if(Math.pow(click.getX() / (width / 2), 2) + Math.pow(click.getY() / (height / 2), 2) <= 1) {
+        if(Math.pow(newClick.getX() / (width / 2), 2) + Math.pow(newClick.getY() / (height / 2), 2) <= 1) {
             return true;
         }
         return false;

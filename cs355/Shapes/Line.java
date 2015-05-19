@@ -39,14 +39,6 @@ public class Line extends Shape {
     }
 
     @Override
-    public boolean isClickInShape(Point2D click) {
-        final AffineTransform transform = Helper.viewToWorld();
-        transform.transform(click, click);
-        double distance = getDistanceFromLine(click);
-        return distance <= 4 * Helper.screenScale;
-    }
-
-    @Override
     public Point2D calculateTopLeftCorner() {
         return null;
     }
@@ -61,6 +53,15 @@ public class Line extends Shape {
         final Square handle1 = new Square(null, point1, HANDLE_WIDTH);
         final Square handle2 = new Square(null, point2, HANDLE_WIDTH);
         return Arrays.asList(handle1, handle2);
+    }
+
+    @Override
+    public boolean isClickInShape(Point2D click) {
+        final AffineTransform transform = Helper.viewToWorld();
+        Point2D newClick = new Point2D.Double();
+        transform.transform(click, newClick);
+        double distance = getDistanceFromLine(newClick);
+        return distance <= 4 * Helper.screenScale;
     }
 
     public Vector getNormal() {
