@@ -244,8 +244,11 @@ public class ControllerImpl implements CS355Controller, MouseMotionListener, Mou
         state.mouseMoved(e);
     }
 
-    public void addLine(Point2D point1, Point2D point2, boolean finished) {
-        Line line = new Line(this.selectedColor, point1, point2);
+    public void addLine(final Point2D point1, final Point2D point2, boolean finished) {
+        Point2D newPoint1 = Helper.viewToWorld(point1);
+        Point2D newPoint2 = Helper.viewToWorld(point2);
+
+        Line line = new Line(this.selectedColor, newPoint1, newPoint2);
         model.addShape(line);
 
         if(finished) {
@@ -253,13 +256,16 @@ public class ControllerImpl implements CS355Controller, MouseMotionListener, Mou
         }
     }
 
-    public void addSquare(Point2D point1, Point2D point2, boolean finished) {
-        //Normalize the points so that we're always drawing from the top left corner to the bottom right corner
-        Point2D[] translation = translatePoints(point1, point2, true);
-        point1 = translation[0];
-        point2 = translation[1];
+    public void addSquare(final Point2D point1, final Point2D point2, boolean finished) {
+        Point2D newPoint1 = Helper.viewToWorld(point1);
+        Point2D newPoint2 = Helper.viewToWorld(point2);
 
-        Square square = new Square(this.selectedColor, point1, Math.min(point2.getX() - point1.getX(), point2.getY() - point1.getY()));
+        //Normalize the points so that we're always drawing from the top left corner to the bottom right corner
+        Point2D[] translation = translatePoints(newPoint1, newPoint2, true);
+        newPoint1 = translation[0];
+        newPoint2 = translation[1];
+
+        Square square = new Square(this.selectedColor, newPoint1, Math.min(newPoint2.getX() - newPoint1.getX(), newPoint2.getY() - newPoint1.getY()));
         model.addShape(square);
 
         if(finished) {
@@ -267,13 +273,16 @@ public class ControllerImpl implements CS355Controller, MouseMotionListener, Mou
         }
     }
 
-    public void addRectangle(Point2D point1, Point2D point2, boolean finished) {
-        //Normalize the points so that we're always drawing from the top left corner to the bottom right corner
-        Point2D[] translation = translatePoints(point1, point2, false);
-        point1 = translation[0];
-        point2 = translation[1];
+    public void addRectangle(final Point2D point1, final Point2D point2, boolean finished) {
+        Point2D newPoint1 = Helper.viewToWorld(point1);
+        Point2D newPoint2 = Helper.viewToWorld(point2);
 
-        Rectangle rectangle = new Rectangle(this.selectedColor, point1, point2.getY() - point1.getY(), point2.getX() - point1.getX());
+        //Normalize the points so that we're always drawing from the top left corner to the bottom right corner
+        Point2D[] translation = translatePoints(newPoint1, newPoint2, false);
+        newPoint1 = translation[0];
+        newPoint2 = translation[1];
+
+        Rectangle rectangle = new Rectangle(this.selectedColor, newPoint1, newPoint2.getY() - newPoint1.getY(), newPoint2.getX() - newPoint1.getX());
         model.addShape(rectangle);
 
         if(finished) {
@@ -281,14 +290,17 @@ public class ControllerImpl implements CS355Controller, MouseMotionListener, Mou
         }
     }
 
-    public void addCircle(Point2D point1, Point2D point2, boolean finished) {
-        //Normalize the points so that we're always drawing from the top left corner to the bottom right corner
-        Point2D[] translation = translatePoints(point1, point2, true);
-        point1 = translation[0];
-        point2 = translation[1];
+    public void addCircle(final Point2D point1, final Point2D point2, boolean finished) {
+        Point2D newPoint1 = Helper.viewToWorld(point1);
+        Point2D newPoint2 = Helper.viewToWorld(point2);
 
-        double radius = Math.min(point2.getY() - point1.getY(), point2.getX() - point1.getX()) / 2;
-        Point2D origin = new Point2D.Double(point1.getX() + radius, point1.getY() + radius);
+        //Normalize the points so that we're always drawing from the top left corner to the bottom right corner
+        Point2D[] translation = translatePoints(newPoint1, newPoint2, true);
+        newPoint1 = translation[0];
+        newPoint2 = translation[1];
+
+        double radius = Math.min(newPoint2.getY() - newPoint1.getY(), newPoint2.getX() - newPoint1.getX()) / 2;
+        Point2D origin = new Point2D.Double(newPoint1.getX() + radius, newPoint1.getY() + radius);
         Circle circle = new Circle(this.selectedColor, origin, radius);
         model.addShape(circle);
 
@@ -297,16 +309,19 @@ public class ControllerImpl implements CS355Controller, MouseMotionListener, Mou
         }
     }
 
-    public void addEllipse(Point2D point1, Point2D point2, boolean finished) {
+    public void addEllipse(final Point2D point1, final Point2D point2, boolean finished) {
+        Point2D newPoint1 = Helper.viewToWorld(point1);
+        Point2D newPoint2 = Helper.viewToWorld(point2);
+
         //Normalize the points so that we're always drawing from the top left corner to the bottom right corner
-        Point2D[] translation = translatePoints(point1, point2, false);
-        point1 = translation[0];
-        point2 = translation[1];
+        Point2D[] translation = translatePoints(newPoint1, newPoint2, false);
+        newPoint1 = translation[0];
+        newPoint2 = translation[1];
 
-        double height = point2.getY() - point1.getY();
-        double width = point2.getX() - point1.getX();
+        double height = newPoint2.getY() - newPoint1.getY();
+        double width = newPoint2.getX() - newPoint1.getX();
 
-        Point2D origin = new Point2D.Double(point1.getX() + width/2, point1.getY() + height/2);
+        Point2D origin = new Point2D.Double(newPoint1.getX() + width/2, newPoint1.getY() + height/2);
         Ellipse ellipse = new Ellipse(this.selectedColor, origin, height, width);
         model.addShape(ellipse);
 
@@ -315,22 +330,16 @@ public class ControllerImpl implements CS355Controller, MouseMotionListener, Mou
         }
     }
 
-    public void addTriangle(Point2D point1, Point2D point2, Point2D point3) {
-        Point2D newPoint1 = new Point2D.Double();
-        Point2D newPoint2 = new Point2D.Double();
-        Point2D newPoint3 = new Point2D.Double();
-
-        //Change points to world coordinates
-        final AffineTransform transform = Helper.viewToWorld();
-        transform.transform(point1, newPoint1);
-        transform.transform(point2, newPoint2);
-        transform.transform(point3, newPoint3);
+    public void addTriangle(final Point2D point1, final Point2D point2, Point2D point3) {
+        Point2D newPoint1 = Helper.viewToWorld(point1);
+        Point2D newPoint2 = Helper.viewToWorld(point2);
+        Point2D newPoint3 = Helper.viewToWorld(point3);
 
         model.addShape(new Triangle(this.selectedColor, newPoint1, newPoint2, newPoint3));
         model.incrementCurrentShape();
     }
 
-    public boolean checkForHandle(Point2D point) {
+    public boolean checkForHandle(final Point2D point) {
         final Shape selectedShape = model.getSelectedShape();
         if(selectedShape != null) {
             for (Square handle : selectedShape.getHandles()) {
@@ -342,7 +351,7 @@ public class ControllerImpl implements CS355Controller, MouseMotionListener, Mou
         return false;
     }
 
-    public int checkForLineHandle(Shape line, Point2D point) {
+    public int checkForLineHandle(Shape line, final Point2D point) {
         final List<Square> handles = line.getHandles();
         for(int i = 0; i < handles.size(); i++) {
             if(handles.get(i).isClickInHandle(line, point)) {
@@ -352,7 +361,7 @@ public class ControllerImpl implements CS355Controller, MouseMotionListener, Mou
         return 0;
     }
 
-    public Shape checkForSelection(Point2D point) {
+    public Shape checkForSelection(final Point2D point) {
         int indexOfSelectedShape = -1;
 
         for (int i=0; i < model.getShapes().size(); i++) {
@@ -377,7 +386,7 @@ public class ControllerImpl implements CS355Controller, MouseMotionListener, Mou
         model.updateScreen();
     }
 
-    protected Point2D[] translatePoints(Point2D point1, Point2D point2, boolean keepRatio) {
+    protected Point2D[] translatePoints(final Point2D point1, final Point2D point2, boolean keepRatio) {
         Point2D[] results = new Point2D.Double[2];
         double min = Math.min(Math.abs(point2.getX() - point1.getX()), Math.abs(point2.getY() - point1.getY()));
         if(min % 2 != 0) {
@@ -425,7 +434,7 @@ public class ControllerImpl implements CS355Controller, MouseMotionListener, Mou
         return results;
     }
 
-    public void moveLineEndpoint(int whichHandle, Point point) {
+    public void moveLineEndpoint(int whichHandle, final Point point) {
         model.moveSelectedLineEndpoint(whichHandle, point);
     }
 }

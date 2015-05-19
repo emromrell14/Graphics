@@ -43,6 +43,11 @@ public class Helper {
         return transform;
     }
 
+    public static Point2D viewToWorld(Point2D point) {
+        AffineTransform transform = viewToWorld();
+        return transform.transform(point, null);
+    }
+
     public static AffineTransform worldToObject(Shape shape) {
         final double rotation = shape.getRotationAngle();
         final AffineTransform transform = new AffineTransform();
