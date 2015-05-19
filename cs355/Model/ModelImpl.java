@@ -6,6 +6,7 @@ import cs355.Shapes.Square;
 import cs355.View.ViewImpl;
 
 import java.awt.*;
+import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
@@ -57,7 +58,7 @@ public class ModelImpl extends Observable {
         return selectedShape;
     }
 
-    public void moveSelectedLineEndpoint(int whichHandle, Point point) {
+    public void moveSelectedLineEndpoint(int whichHandle, Point2D point) {
         switch (whichHandle) {
             case 1:
                 ((Line) selectedShape).setPoint1(point);
