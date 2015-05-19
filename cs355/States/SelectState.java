@@ -75,14 +75,16 @@ public class SelectState implements State {
     }
 
     private double calculateRotationAngle(Point2D point) {
+        Point2D newPoint = Helper.viewToWorld(point);
+
         //All this is doing is creating a point straight down from the center so that we can calculate the angle from it
         Point2D pointBelow = new Point2D.Double(selectedShape.getCenter().getX(), selectedShape.getCenter().getY() + 100);
 
-        double a = Helper.getDistance(pointBelow, point);
+        double a = Helper.getDistance(pointBelow, newPoint);
         double b = Helper.getDistance(pointBelow, selectedShape.getCenter());
-        double c = Helper.getDistance(point, selectedShape.getCenter());
+        double c = Helper.getDistance(newPoint, selectedShape.getCenter());
 
-        if(point.getX() < selectedShape.getCenter().getX()) {
+        if(newPoint.getX() < selectedShape.getCenter().getX()) {
             return Helper.lawOfCosines(a, b, c);
         } else {
             return 2 * Math.PI - Helper.lawOfCosines(a, b, c);
