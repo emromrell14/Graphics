@@ -31,19 +31,18 @@ public class Square extends Shape {
 
     public boolean isClickInHandle(Shape parent, Point2D click) {
         if(parent instanceof Line) {
-            if(Math.abs(click.getX() - this.getCenter().getX()) <= width && Math.abs(click.getY() - this.getCenter().getY()) <= width) {
+            Point2D newClick = Helper.viewToWorld(click);
+            if(Math.abs(newClick.getX() - this.getCenter().getX()) <= width && Math.abs(newClick.getY() - this.getCenter().getY()) <= width) {
                 return true;
             }
             return false;
 
         } else {
+            Point2D newClick = Helper.viewToObject(parent, click);
 
-            AffineTransform transform = Helper.worldToObject(parent);
-            transform.transform(click, click);
+            newClick.setLocation(0, newClick.getY() - parent.getHandleDisplacement().get(1) - Shape.HANDLE_WIDTH() / 2);
 
-            click.setLocation(0, click.getY() - parent.getHandleDisplacement().get(1) - Shape.HANDLE_WIDTH() / 2);
-
-            if(Math.abs(click.getX()) <= width && Math.abs(click.getY()) <= width) {
+            if(Math.abs(newClick.getX()) <= width && Math.abs(newClick.getY()) <= width) {
                 return true;
             }
             return false;
