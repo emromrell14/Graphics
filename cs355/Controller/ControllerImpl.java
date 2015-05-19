@@ -132,13 +132,13 @@ public class ControllerImpl implements CS355Controller, MouseMotionListener, Mou
             y -= getBarSize() / 4;
         }
 
-        x = normalize(x);
-        y = normalize(y);
+        x = restrictToBounds(x);
+        y = restrictToBounds(y);
 
         return new Vector(x, y);
     }
 
-    private double normalize(double value) {
+    private double restrictToBounds(double value) {
         if(value < 0) {
             value = 0;
         } else if(value >= (Helper.DEFAULT_SCREEN_SIZE * 4 - getBarSize())) {
