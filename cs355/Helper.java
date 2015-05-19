@@ -75,6 +75,11 @@ public class Helper {
         return viewToObject;
     }
 
+    public static Point2D viewToObject(Shape shape, Point2D click) {
+        AffineTransform transform = Helper.viewToObject(shape);
+        return transform.transform(click, null);
+    }
+
     public static AffineTransform objectToWorld(Shape shape) {
         final double rotation = shape.getRotationAngle();
         final AffineTransform transform = new AffineTransform();
