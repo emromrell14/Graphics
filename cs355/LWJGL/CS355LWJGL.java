@@ -1,7 +1,5 @@
 package cs355.LWJGL;
 
-import java.util.logging.Level;
-
 /**
  * @author Brennan Smith
  */
@@ -11,7 +9,7 @@ public class CS355LWJGL {
         LWJGLSandbox main = null;
         try {
             main = new LWJGLSandbox();
-            main.create(new StudentLWJGLController());
+            main.create(new ControllerImpl());
             main.run();
         } catch (Exception ex) {
             ex.printStackTrace();
