@@ -14,6 +14,12 @@ public class Point3D {
         z = newZ;
     }
 
+    public Point3D(Point3D otherPoint) {
+        x = otherPoint.x;
+        y = otherPoint.y;
+        z = otherPoint.z;
+    }
+
     double length() {
         return Math.sqrt(x * x + y * y + z * z);
     }
