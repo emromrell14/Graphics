@@ -48,6 +48,7 @@ public class ControllerImpl implements CS355LWJGLController {
     //If not, I apologize.
     private WireFrame model = new HouseModel();
     private Point3D location = new Point3D(0, 0, -20);
+    private Point3D displacement = new Point3D(0, 0, -20);
     private double rotationAngle = 0;
 
     //This method is called to "resize" the viewport to match the screen.
@@ -76,75 +77,24 @@ public class ControllerImpl implements CS355LWJGLController {
     public void updateKeyboard() {
         glMatrixMode(GL_MODELVIEW);
         if (Keyboard.isKeyDown(Keyboard.KEY_A)) {
-            System.out.println("I should move left");
-            double angleInRadians = rotationAngle * Math.PI / 180;
-            double deltaX = Math.cos(angleInRadians) * MOVEMENT;
-            double deltaZ = Math.sin(angleInRadians) * MOVEMENT;
-            location.x += deltaX;
-            location.z += deltaZ;
-            glTranslated(deltaX, 0, deltaZ);
-            System.out.println("Location: " + location);
+            moveX(false);
         } else if (Keyboard.isKeyDown(Keyboard.KEY_D)) {
-            System.out.println("I should move right");
-            double angleInRadians = rotationAngle * Math.PI / 180;
-            double deltaX = Math.cos(angleInRadians) * MOVEMENT;
-            double deltaZ = Math.sin(angleInRadians) * MOVEMENT;
-            location.x -= deltaX;
-            location.z -= deltaZ;
-            glTranslated(-deltaX, 0, -deltaZ);
-            System.out.println("Location: " + location);
-        } else if (Keyboard.isKeyDown(Keyboard.KEY_W)) {
-            System.out.println("I should move forward");
-            double angleInRadians = rotationAngle * Math.PI / 180;
-            double deltaX = Math.sin(angleInRadians) * MOVEMENT;
-            double deltaZ = Math.cos(angleInRadians) * MOVEMENT;
-            location.x += deltaX;
-            location.z += deltaZ;
-            glTranslated(deltaX, 0, deltaZ);
-            System.out.println("Location: " + location);
-        } else if (Keyboard.isKeyDown(Keyboard.KEY_S)) {
-            System.out.println("I should move backward");
-            double angleInRadians = rotationAngle * Math.PI / 180;
-            double deltaX = Math.sin(angleInRadians) * MOVEMENT;
-            double deltaZ = Math.cos(angleInRadians) * MOVEMENT;
-            location.x -= deltaX;
-            location.z -= deltaZ;
-            glTranslated(-deltaX, 0, -deltaZ);
-            System.out.println("Location: " + location);
-        } else if (Keyboard.isKeyDown(Keyboard.KEY_Q)) {
-//            System.out.println("I should turn left");
-            rotationAngle -= ROTATION;
-            System.out.println("Angle: " + rotationAngle);
-            glTranslated(-location.x, -location.y, -location.z);
-            glRotated(-ROTATION, 0, 1, 0);
-            glTranslated(location.x, location.y, location.z);
-        } else if (Keyboard.isKeyDown(Keyboard.KEY_E)) {
-//            System.out.println("I should turn right");
-            rotationAngle += ROTATION;
-            glTranslated(-location.x, -location.y, -location.z);
-            glRotated(ROTATION, 0, 1, 0);
-            glTranslated(location.x, location.y, location.z);
-            System.out.println("Angle: " + rotationAngle);
+            moveX(true);
         } else if (Keyboard.isKeyDown(Keyboard.KEY_R)) {
-            System.out.println("I should move up");
-            location.y += MOVEMENT;
-            glTranslated(0, MOVEMENT, 0);
-            System.out.println("Location: " + location);
+            moveY(true);
         } else if (Keyboard.isKeyDown(Keyboard.KEY_F)) {
-            System.out.println("I should move down");
-            location.y -= MOVEMENT;
-            glTranslated(0, -MOVEMENT, 0);
-            System.out.println("Location: " + location);
+            moveY(false);
+        } else if (Keyboard.isKeyDown(Keyboard.KEY_W)) {
+            moveZ(false);
+        } else if (Keyboard.isKeyDown(Keyboard.KEY_S)) {
+            moveZ(true);
+        } else if (Keyboard.isKeyDown(Keyboard.KEY_Q)) {
+            rotateX(true);
+        } else if (Keyboard.isKeyDown(Keyboard.KEY_E)) {
+            rotateX(false);
         } else if (Keyboard.isKeyDown(Keyboard.KEY_H)) {
             System.out.println("I should return to the original 'home' position and orientation");
-            glTranslated(-location.x, -location.y, -location.z);
-            glRotated(-rotationAngle, 0, 1, 0);
-            glTranslated(location.x, location.y, location.z);
-            glTranslated(-location.x, -location.y, -location.z - 20);
-            location.x = 0;
-            location.y = 0;
-            location.z = -20;
-            rotationAngle = 0;
+            goHome();
             System.out.println("Location: " + location);
         }
 
@@ -157,6 +107,76 @@ public class ControllerImpl implements CS355LWJGLController {
             System.out.println("I should switch to perspective projection");
             gluPerspective(0, 0, 0, 0);
         }
+    }
+
+    private void move(double deltaX, double deltaY, double deltaZ) {
+        location.x += deltaX;
+        location.y += deltaY;
+        location.z += deltaZ;
+
+        displacement.x += deltaX;
+        displacement.y += deltaY;
+        displacement.z += deltaZ;
+
+        glTranslated(deltaX, deltaY, deltaZ);
+    }
+
+    private void moveX(boolean movingLeft) {
+        double angleInRadians = rotationAngle * Math.PI / 180;
+        double deltaX = Math.cos(angleInRadians) * MOVEMENT;
+        double deltaZ = Math.sin(angleInRadians) * MOVEMENT;
+
+        if(movingLeft) {
+            deltaX *= -1;
+            deltaZ *= -1;
+        }
+
+        move(deltaX, 0, deltaZ);
+    }
+
+    private void moveY(boolean movingUp) {
+        double deltaY = MOVEMENT;
+        if(movingUp) {
+            deltaY *= -1;
+        }
+
+        move(0, deltaY, 0);
+    }
+
+    private void moveZ(boolean movingOut) {
+        double angleInRadians = rotationAngle * Math.PI / 180;
+        double deltaX = Math.sin(-angleInRadians) * MOVEMENT;
+        double deltaZ = Math.cos(-angleInRadians) * MOVEMENT;
+
+        if(movingOut) {
+            deltaX *= -1;
+            deltaZ *= -1;
+        }
+
+        move(deltaX, 0, deltaZ);
+    }
+
+    private void rotateX(boolean rotatingLeft) {
+        double deltaRotation = ROTATION;
+        if(rotatingLeft) {
+            deltaRotation *= -1;
+        }
+
+        rotationAngle += deltaRotation;
+        glTranslated(-location.x, -location.y, -location.z);
+        glRotated(deltaRotation, 0, 1, 0);
+        glTranslated(location.x, location.y, location.z);
+    }
+
+    private void goHome() {
+        glTranslated(-location.x, -location.y, -location.z);
+        glRotated(-rotationAngle, 0, 1, 0);
+        glTranslated(location.x, location.y, location.z);
+        glTranslated(-location.x, -location.y, -location.z - 20);
+        location.x = 0;
+        location.y = 0;
+        location.z = -20;
+        rotationAngle = 0;
     }
 
     //This method is the one that actually draws to the screen.
