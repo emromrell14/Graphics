@@ -10,8 +10,8 @@ package cs355.LWJGL;
 //If it doesn't appear in this list, you probably don't.
 //Of course, your milage may vary. Don't feel restricted by this list of imports.
 
-import cs355.*;
 import org.lwjgl.input.Keyboard;
+import sun.org.mozilla.javascript.internal.ast.ForInLoop;
 
 import java.util.Iterator;
 
@@ -27,7 +27,6 @@ import static org.lwjgl.opengl.GL11.glColor3d;
 import static org.lwjgl.opengl.GL11.glEnd;
 import static org.lwjgl.opengl.GL11.glLoadIdentity;
 import static org.lwjgl.opengl.GL11.glMatrixMode;
-import static org.lwjgl.opengl.GL11.glPushMatrix;
 import static org.lwjgl.opengl.GL11.glRotated;
 import static org.lwjgl.opengl.GL11.glTranslated;
 import static org.lwjgl.opengl.GL11.glVertex3d;
@@ -41,27 +40,33 @@ import static org.lwjgl.util.glu.GLU.gluPerspective;
 public class ControllerImpl implements CS355LWJGLController {
     public static final double MOVEMENT = .25;
     public static final double ROTATION = 1;
+    public static final Point3D HOME_LOCATION = new Point3D(0, 0, -20);
+    public static final int ORTHO_VIEW_AMOUNT = 20;
+    public static final int Z_NEAR = 1;
+    public static final int Z_FAR = 100;
+    public static final int FIELD_OF_VIEW_ANGLE = 90;
     //This is a model of a house.
     //It has a single method that returns an iterator full of Line3Ds.
     //A "Line3D" is a wrapper class around two Point2Ds.
     //It should all be fairly intuitive if you look at those classes.
     //If not, I apologize.
     private WireFrame model = new HouseModel();
-    private Point3D location = new Point3D(0, 0, -20);
-    private Point3D displacement = new Point3D(0, 0, -20);
+    private Point3D location = new Point3D(HOME_LOCATION);
+    private Point3D displacement = new Point3D(HOME_LOCATION);
     private double rotationAngle = 0;
+    public boolean goOrtho = true;
+    public boolean goPerspective = true;
 
     //This method is called to "resize" the viewport to match the screen.
     //When you first start, have it be in perspective mode.
     @Override
     public void resizeGL() {
-        gluPerspective(90, DISPLAY_WIDTH / DISPLAY_HEIGHT, 1, 100);
+        glMatrixMode(GL_PROJECTION);
+        glLoadIdentity();
+        gluPerspective(FIELD_OF_VIEW_ANGLE, DISPLAY_WIDTH / DISPLAY_HEIGHT, Z_NEAR, Z_FAR);
         glViewport(0, 0, DISPLAY_WIDTH, DISPLAY_HEIGHT);
 
         glMatrixMode(GL_MODELVIEW);
-
-        //Begin looking from 20 units away from the origin
-        glTranslated(0, 0, -20);
     }
 
     @Override
@@ -93,19 +98,15 @@ public class ControllerImpl implements CS355LWJGLController {
         } else if (Keyboard.isKeyDown(Keyboard.KEY_E)) {
             rotateX(false);
         } else if (Keyboard.isKeyDown(Keyboard.KEY_H)) {
-            System.out.println("I should return to the original 'home' position and orientation");
             goHome();
-            System.out.println("Location: " + location);
         }
 
-        glMatrixMode(GL_PROJECTION);
         if (Keyboard.isKeyDown(Keyboard.KEY_O)) {
-            System.out.println("I should switch to orthographic projection");
-//            glOrtho(location.x - 20, location.x + 20, location.y - 20, location.y + 20, 1, 100);
-//            glOrtho(0, 0, 0, 0, 0, 0);
+            goToOrtho();
+            goOrtho = false;
         } else if (Keyboard.isKeyDown(Keyboard.KEY_P)) {
-            System.out.println("I should switch to perspective projection");
-            gluPerspective(0, 0, 0, 0);
+            goToPerspective();
+            goPerspective = false;
         }
     }
 
@@ -117,8 +118,6 @@ public class ControllerImpl implements CS355LWJGLController {
         displacement.x += deltaX;
         displacement.y += deltaY;
         displacement.z += deltaZ;
-
-        glTranslated(deltaX, deltaY, deltaZ);
     }
 
     private void moveX(boolean movingLeft) {
@@ -163,20 +162,27 @@ public class ControllerImpl implements CS355LWJGLController {
         }
 
         rotationAngle += deltaRotation;
-        glTranslated(-location.x, -location.y, -location.z);
-        glRotated(deltaRotation, 0, 1, 0);
-        glTranslated(location.x, location.y, location.z);
     }
 
     private void goHome() {
-        glTranslated(-location.x, -location.y, -location.z);
-        glRotated(-rotationAngle, 0, 1, 0);
-        glTranslated(location.x, location.y, location.z);
-        glTranslated(-location.x, -location.y, -location.z - 20);
-        location.x = 0;
-        location.y = 0;
-        location.z = -20;
+        location = new Point3D(HOME_LOCATION);
         rotationAngle = 0;
+    }
+
+    private void goToOrtho() {
+        System.out.println("I should switch to orthographic projection");
+        glMatrixMode(GL_PROJECTION);
+
+        glLoadIdentity();
+        glOrtho(-ORTHO_VIEW_AMOUNT, ORTHO_VIEW_AMOUNT, -ORTHO_VIEW_AMOUNT, ORTHO_VIEW_AMOUNT, Z_NEAR, Z_FAR);
+    }
+
+    private void goToPerspective() {
+        System.out.println("I should switch to perspective projection");
+        glMatrixMode(GL_PROJECTION);
+
+        glLoadIdentity();
+        gluPerspective(FIELD_OF_VIEW_ANGLE, DISPLAY_WIDTH / DISPLAY_HEIGHT, Z_NEAR, Z_FAR);
     }
 
     //This method is the one that actually draws to the screen.
@@ -186,17 +192,31 @@ public class ControllerImpl implements CS355LWJGLController {
         glClear(GL_COLOR_BUFFER_BIT);
 
         //Do your drawing here.
+        glMatrixMode(GL_MODELVIEW);
+        glLoadIdentity();
+        glRotated(rotationAngle, 0, 1, 0);
+        glTranslated(location.x, location.y, location.z);
 
         glColor3d(1, 1, 1);
-        final Iterator<Line3D> lines = model.getLines();
+        glBegin(GL_LINES);
+        Iterator<Line3D> lines = model.getLines();
         while(lines.hasNext()) {
-            glBegin(GL_LINES);
             final Line3D line = lines.next();
             final Point3D start = line.start;
             final Point3D end = line.end;
             glVertex3d(start.x, start.y, start.z);
             glVertex3d(end.x, end.y, end.z);
-            glEnd();
         }
+
+        glColor3d(1, 0, 0);
+        lines = model.getLines();
+        while(lines.hasNext()) {
+            final Line3D line = lines.next();
+            final Point3D start = line.start;
+            final Point3D end = line.end;
+            glVertex3d(start.x + 15, start.y, start.z);
+            glVertex3d(end.x + 15, end.y, end.z);
+        }
+        glEnd();
     }
 }
