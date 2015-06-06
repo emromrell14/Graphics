@@ -1,10 +1,8 @@
 package cs355;
 
-import cs355.Shapes.*;
+import cs355.LWJGL.Point3D;
 import cs355.Shapes.Shape;
-import javafx.scene.transform.Affine;
 
-import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 
@@ -12,15 +10,18 @@ import java.awt.geom.Point2D;
  * Created by eric on 5/1/15.
  */
 public class Helper {
-    public static Vector topLeftOffset = new Vector(0, 0);
+    public static Vector2D topLeftOffset = new Vector2D(0, 0);
+    public static Point3D cameraLocation = new Point3D(0, 0, -20);
+    public static double rotationAngle = 0;
     public static double screenScale = 1;
     public static int DEFAULT_SCREEN_SIZE = 512;
+    public static boolean draw3d = false;
 
     public static double getDistance(Point2D a, Point2D b) {
         return Math.sqrt(Math.pow(a.getY() - b.getY(), 2) + Math.pow(a.getX() - b.getX(), 2));
     }
 
-    public static double getDistance(Vector vector) {
+    public static double getDistance(Vector2D vector) {
         return Math.sqrt(Math.pow(vector.get(0), 2) + Math.pow(vector.get(1), 2));
     }
 
