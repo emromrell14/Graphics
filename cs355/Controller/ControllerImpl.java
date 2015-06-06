@@ -7,13 +7,12 @@ import cs355.Shapes.*;
 import cs355.Shapes.Rectangle;
 import cs355.Shapes.Shape;
 import cs355.States.*;
-import cs355.Vector;
+import cs355.Vector2D;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.util.Iterator;
@@ -23,6 +22,7 @@ import java.util.List;
  * Created by eric on 4/29/15.
  */
 public class ControllerImpl implements CS355Controller, MouseMotionListener, MouseListener {
+    private static final int MOVEMENT = 1;
     private State state = new BlankState();
     private ModelImpl model;
     private Color selectedColor;
@@ -105,7 +105,7 @@ public class ControllerImpl implements CS355Controller, MouseMotionListener, Mou
         GUIFunctions.setVScrollBarKnob((int) getBarSize());
 
         //Change the position of the bar
-        Vector deltaOffset = getNormalizedOffset(zoomFactor);
+        Vector2D deltaOffset = getNormalizedOffset(zoomFactor);
         GUIFunctions.setHScrollBarPosit((int) deltaOffset.get(0));
         GUIFunctions.setVScrollBarPosit((int) deltaOffset.get(1));
 
@@ -120,7 +120,7 @@ public class ControllerImpl implements CS355Controller, MouseMotionListener, Mou
         return Helper.screenScale * Helper.DEFAULT_SCREEN_SIZE;
     }
 
-    private Vector getNormalizedOffset(double zoomFactor) {
+    private Vector2D getNormalizedOffset(double zoomFactor) {
         double x = Helper.topLeftOffset.get(0);
         double y = Helper.topLeftOffset.get(1);
 
@@ -135,7 +135,7 @@ public class ControllerImpl implements CS355Controller, MouseMotionListener, Mou
         x = restrictToBounds(x);
         y = restrictToBounds(y);
 
-        return new Vector(x, y);
+        return new Vector2D(x, y);
     }
 
     private double restrictToBounds(double value) {
@@ -161,12 +161,89 @@ public class ControllerImpl implements CS355Controller, MouseMotionListener, Mou
 
     @Override
     public void toggle3DModelDisplay() {
-
+        if(Helper.draw3d) {
+            Helper.draw3d = false;
+        } else {
+            Helper.draw3d = true;
+        }
+        model.updateScreen();
     }
 
     @Override
     public void keyPressed(Iterator<Integer> iterator) {
+        while(iterator.hasNext()) {
+            processKey(iterator.next());
+        }
+    }
 
+    private void processKey(Integer key) {
+        switch(key) {
+            case (int) 'A':
+                moveX(true);
+                break;
+            case (int) 'D':
+                moveX(false);
+                break;
+            case (int) 'R':
+                moveY(false);
+                break;
+            case (int) 'F':
+                moveY(true);
+                break;
+            case (int) 'W':
+                moveZ(false);
+                break;
+            case (int) 'S':
+                moveZ(true);
+                break;
+            case (int) 'Q':
+                Helper.rotationAngle += Math.PI / 32;
+                break;
+            case (int) 'E':
+                Helper.rotationAngle -= Math.PI / 32;
+                break;
+        }
+        System.out.println("Camera: " + Helper.cameraLocation + ". Angle: " + Helper.rotationAngle);
+        model.updateScreen();
+    }
+
+    private void move(double deltaX, double deltaY, double deltaZ) {
+        Helper.cameraLocation.x += deltaX;
+        Helper.cameraLocation.y += deltaY;
+        Helper.cameraLocation.z += deltaZ;
+    }
+
+    private void moveX(boolean movingLeft) {
+        double deltaX = Math.cos(Helper.rotationAngle) * MOVEMENT;
+        double deltaZ = Math.sin(Helper.rotationAngle) * MOVEMENT;
+
+        if(movingLeft) {
+            deltaX *= -1;
+            deltaZ *= -1;
+        }
+
+        move(deltaX, 0, deltaZ);
+    }
+
+    private void moveY(boolean movingDown) {
+        double deltaY = MOVEMENT;
+        if(movingDown) {
+            deltaY *= -1;
+        }
+
+        move(0, deltaY, 0);
+    }
+
+    private void moveZ(boolean movingOut) {
+        double deltaX = -Math.sin(Helper.rotationAngle) * MOVEMENT;
+        double deltaZ = Math.cos(Helper.rotationAngle) * MOVEMENT;
+
+        if(movingOut) {
+            deltaX *= -1;
+            deltaZ *= -1;
+        }
+
+        move(deltaX, 0, deltaZ);
     }
 
     @Override

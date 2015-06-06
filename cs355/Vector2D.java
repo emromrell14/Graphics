@@ -5,24 +5,24 @@ import java.awt.geom.Point2D;
 /**
  * Created by eric on 5/7/15.
  */
-public class Vector {
+public class Vector2D {
     private double[] vector = new double[2];
 
-    public Vector(double[] vector) {
+    public Vector2D(double[] vector) {
         this.vector = vector;
     }
 
-    public Vector(double value1, double value2) {
+    public Vector2D(double value1, double value2) {
         this.vector[0] = value1;
         this.vector[1] = value2;
     }
 
-    public Vector(Point2D point) {
+    public Vector2D(Point2D point) {
         this.vector[0] = point.getX();
         this.vector[1] = point.getY();
     }
 
-    public Vector(Point2D point1, Point2D point2) {
+    public Vector2D(Point2D point1, Point2D point2) {
         this.vector[0] = point1.getX() - point2.getX();
         this.vector[1] = point1.getY() - point2.getY();
     }
@@ -43,11 +43,11 @@ public class Vector {
         return vector.length;
     }
 
-    public Vector getPerpendicular() {
-        return new Vector(-this.vector[1], this.vector[0]);
+    public Vector2D getPerpendicular() {
+        return new Vector2D(-this.vector[1], this.vector[0]);
     }
 
-    public double dot(Vector other) {
+    public double dot(Vector2D other) {
         double result = 0;
         for(int i = 0; i < this.size(); i++) {
             result += vector[i] * other.get(i);
