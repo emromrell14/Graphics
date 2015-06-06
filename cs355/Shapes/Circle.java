@@ -1,13 +1,10 @@
 package cs355.Shapes;
 
 import cs355.Helper;
-import cs355.Vector;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import cs355.Vector2D;
 
 import java.awt.*;
-import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.awt.geom.Point2D;
 
@@ -37,7 +34,7 @@ public class Circle extends Shape {
     }
 
     @Override
-    public Vector getHandleDisplacement() {
+    public Vector2D getHandleDisplacement() {
         return null;
     }
 

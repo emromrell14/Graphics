@@ -1,10 +1,9 @@
 package cs355.Shapes;
 
 import cs355.Helper;
-import cs355.Vector;
+import cs355.Vector2D;
 
 import java.awt.*;
-import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.util.Arrays;
 import java.util.List;
@@ -63,13 +62,13 @@ public class Triangle extends Shape {
     }
 
     @Override
-    public Vector getHandleDisplacement() {
-        return new Vector(- HANDLE_WIDTH() * Helper.screenScale / 2, this.getHalfHeight() + HANDLE_DISPLACEMENT() + HANDLE_WIDTH() * Helper.screenScale / 2);
+    public Vector2D getHandleDisplacement() {
+        return new Vector2D(- HANDLE_WIDTH() * Helper.screenScale / 2, this.getHalfHeight() + HANDLE_DISPLACEMENT() + HANDLE_WIDTH() * Helper.screenScale / 2);
     }
 
     @Override
     public List<Square> getHandles() {
-        final Vector displacement = this.getHandleDisplacement();
+        final Vector2D displacement = this.getHandleDisplacement();
         final Point2D origin = new Point2D.Double(this.getCenter().getX() + displacement.get(0), this.getCenter().getY() + displacement.get(1));
         final Square handle = new Square(null, origin, HANDLE_WIDTH() * Helper.screenScale);
         handle.setRotationAngle(this.getRotationAngle());
@@ -80,9 +79,9 @@ public class Triangle extends Shape {
     public boolean isClickInShape(Point2D click) {
         Point2D newClick = Helper.viewToObject(this, click);
 
-        double a = new Vector(newClick, point1).dot(new Vector(point2, point1).getPerpendicular());
-        double b = new Vector(newClick, point2).dot(new Vector(point3, point2).getPerpendicular());
-        double c = new Vector(newClick, point3).dot(new Vector(point1, point3).getPerpendicular());
+        double a = new Vector2D(newClick, point1).dot(new Vector2D(point2, point1).getPerpendicular());
+        double b = new Vector2D(newClick, point2).dot(new Vector2D(point3, point2).getPerpendicular());
+        double c = new Vector2D(newClick, point3).dot(new Vector2D(point1, point3).getPerpendicular());
 
         if((a >= 0 && b >= 0 && c >= 0) || (a <= 0 && b <= 0 && c <= 0)) {
             return true;

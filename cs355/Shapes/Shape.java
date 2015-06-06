@@ -1,10 +1,9 @@
 package cs355.Shapes;
 
 import cs355.Helper;
-import cs355.Vector;
+import cs355.Vector2D;
 
 import java.awt.*;
-import java.awt.geom.AffineTransform;
 import java.util.List;
 import java.awt.geom.Point2D;
 
@@ -64,7 +63,7 @@ public abstract class Shape {
 
     public abstract Point2D calculateTopLeftCorner();
 
-    public abstract Vector getHandleDisplacement();
+    public abstract Vector2D getHandleDisplacement();
 
     public abstract List<Square> getHandles();
 

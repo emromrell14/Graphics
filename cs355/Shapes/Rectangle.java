@@ -1,10 +1,9 @@
 package cs355.Shapes;
 
 import cs355.Helper;
-import cs355.Vector;
+import cs355.Vector2D;
 
 import java.awt.*;
-import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.util.Arrays;
 import java.util.List;
@@ -45,13 +44,13 @@ public class Rectangle extends Shape {
     }
 
     @Override
-    public Vector getHandleDisplacement() {
-        return new Vector(- HANDLE_WIDTH() / 2, this.height / 2 + HANDLE_DISPLACEMENT() + HANDLE_WIDTH() / 2);
+    public Vector2D getHandleDisplacement() {
+        return new Vector2D(- HANDLE_WIDTH() / 2, this.height / 2 + HANDLE_DISPLACEMENT() + HANDLE_WIDTH() / 2);
     }
 
     @Override
     public List<Square> getHandles() {
-        final Vector displacement = this.getHandleDisplacement();
+        final Vector2D displacement = this.getHandleDisplacement();
         final Point2D origin = new Point2D.Double(this.getCenter().getX() + displacement.get(0), this.getCenter().getY() + displacement.get(1));
         final Square handle = new Square(null, origin, HANDLE_WIDTH());
         handle.setRotationAngle(this.getRotationAngle());

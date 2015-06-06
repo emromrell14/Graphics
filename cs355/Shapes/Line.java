@@ -1,10 +1,9 @@
 package cs355.Shapes;
 
 import cs355.Helper;
-import cs355.Vector;
+import cs355.Vector2D;
 
 import java.awt.*;
-import java.awt.geom.AffineTransform;
 import java.util.Arrays;
 import java.util.List;
 import java.awt.geom.Point2D;
@@ -44,7 +43,7 @@ public class Line extends Shape {
     }
 
     @Override
-    public Vector getHandleDisplacement() {
+    public Vector2D getHandleDisplacement() {
         return null;
     }
 
@@ -63,19 +62,19 @@ public class Line extends Shape {
         return distance <= 4 * Helper.screenScale;
     }
 
-    public Vector getNormal() {
-        Vector vector = new Vector(point1, point2);
+    public Vector2D getNormal() {
+        Vector2D vector = new Vector2D(point1, point2);
         double distance = Helper.getDistance(vector);
-        return getPerpendicular(new Vector(vector.get(0) / distance, vector.get(1) / distance));
+        return getPerpendicular(new Vector2D(vector.get(0) / distance, vector.get(1) / distance));
     }
 
-    public Vector getPerpendicular(Vector vector) {
-        return new Vector(-vector.get(1), vector.get(0));
+    public Vector2D getPerpendicular(Vector2D vector) {
+        return new Vector2D(-vector.get(1), vector.get(0));
     }
 
     private double getDistanceFromLine(Point2D point) {
-        final Vector p = new Vector(point);
-        final Vector normal = this.getNormal();
-        return Math.abs(p.dot(normal) - new Vector(point1).dot(normal));
+        final Vector2D p = new Vector2D(point);
+        final Vector2D normal = this.getNormal();
+        return Math.abs(p.dot(normal) - new Vector2D(point1).dot(normal));
     }
 }
