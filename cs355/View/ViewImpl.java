@@ -3,14 +3,14 @@ package cs355.View;
 import cs355.GUIFunctions;
 import cs355.Helper;
 import cs355.Model.ModelImpl;
+import cs355.Renderer;
 import cs355.Shapes.*;
 import cs355.Shapes.Shape;
-import cs355.Vector;
+import cs355.Vector2D;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
-import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -19,8 +19,7 @@ import java.util.Observer;
  */
 public class ViewImpl implements ViewRefresher, Observer {
     private ModelImpl model;
-
-
+    private Renderer renderer = new Renderer();
 
     public void setModel(ModelImpl model) {
         this.model = model;
@@ -40,6 +39,10 @@ public class ViewImpl implements ViewRefresher, Observer {
 
         if(model.getSelectedShape() != null) {
             drawShape(g2d, model.getSelectedShape(), true);
+        }
+
+        if(Helper.draw3d) {
+            renderer.render(g2d);
         }
     }
 
@@ -95,7 +98,7 @@ public class ViewImpl implements ViewRefresher, Observer {
             g2d.drawRect(-halfWidth, -halfWidth, (int) square.getWidth(), (int) square.getWidth());
 
             //Draw the handle
-            final Vector displacement = square.getHandleDisplacement();
+            final Vector2D displacement = square.getHandleDisplacement();
             transform.translate(displacement.get(0), displacement.get(1));
             g2d.setTransform(transform);
             g2d.drawRect(0, 0, Shape.HANDLE_WIDTH(), Shape.HANDLE_WIDTH());
@@ -117,7 +120,7 @@ public class ViewImpl implements ViewRefresher, Observer {
             g2d.drawRect(-halfWidth, -halfHeight, (int) rectangle.getWidth(), (int) rectangle.getHeight());
 
             //Draw the handle
-            final Vector displacement = rectangle.getHandleDisplacement();
+            final Vector2D displacement = rectangle.getHandleDisplacement();
             transform.translate(displacement.get(0), displacement.get(1));
             g2d.setTransform(transform);
             g2d.drawRect(0, 0, Shape.HANDLE_WIDTH(), Shape.HANDLE_WIDTH());
@@ -152,7 +155,7 @@ public class ViewImpl implements ViewRefresher, Observer {
             g2d.drawOval(-halfWidth, -halfHeight, (int) ellipse.getWidth(), (int) ellipse.getHeight());
 
             //Draw the handle
-            final Vector displacement = ellipse.getHandleDisplacement();
+            final Vector2D displacement = ellipse.getHandleDisplacement();
             transform.translate(displacement.get(0), displacement.get(1));
             g2d.setTransform(transform);
             g2d.drawRect(0, 0, Shape.HANDLE_WIDTH(), Shape.HANDLE_WIDTH());
@@ -180,7 +183,7 @@ public class ViewImpl implements ViewRefresher, Observer {
             g2d.drawPolygon(xPoints, yPoints, 3);
 
             //Draw the handle
-            final Vector displacement = triangle.getHandleDisplacement();
+            final Vector2D displacement = triangle.getHandleDisplacement();
             transform.translate(displacement.get(0), displacement.get(1));
             g2d.setTransform(transform);
             g2d.drawRect(0, 0, Shape.HANDLE_WIDTH(), Shape.HANDLE_WIDTH());
