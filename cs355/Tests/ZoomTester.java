@@ -2,12 +2,9 @@ package cs355.Tests;
 
 import cs355.CS355Frame;
 import cs355.Controller.ControllerImpl;
-import cs355.GUIFunctions;
 import cs355.Helper;
 import cs355.Model.ModelImpl;
-import cs355.Vector;
 import cs355.View.ViewImpl;
-import cs355.solution.CS355;
 import org.junit.Before;
 import org.junit.Test;
 
