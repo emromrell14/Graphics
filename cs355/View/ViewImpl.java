@@ -32,6 +32,11 @@ public class ViewImpl implements ViewRefresher, Observer {
 
     @Override
     public void refreshView(Graphics2D g2d) {
+        //Draw image
+        if(Helper.drawImage && model.getImage() != null) {
+            g2d.drawImage(model.getImage().getImage(), 0, 0, null);
+        }
+
         //Draw all shapes
         for (Shape shape : model.getShapes()) {
             drawShape(g2d, shape, false);

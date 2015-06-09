@@ -16,6 +16,7 @@ public class Helper {
     public static double screenScale = 1;
     public static int DEFAULT_SCREEN_SIZE = 512;
     public static boolean draw3d = false;
+    public static boolean drawImage = false;
 
     public static double getDistance(Point2D a, Point2D b) {
         return Math.sqrt(Math.pow(a.getY() - b.getY(), 2) + Math.pow(a.getX() - b.getX(), 2));

@@ -1,11 +1,11 @@
 package cs355.Model;
 
+import cs355.*;
 import cs355.Shapes.Line;
 import cs355.Shapes.Shape;
 import cs355.Shapes.Square;
 import cs355.View.ViewImpl;
 
-import java.awt.*;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,9 +15,10 @@ import java.util.Observable;
  * Created by eric on 4/29/15.
  */
 public class ModelImpl extends Observable {
-    List<Shape> shapes = new ArrayList<Shape>();
-    int currentShape = 0;
-    Shape selectedShape = null;
+    public List<Shape> shapes = new ArrayList<Shape>();
+    public int currentShape = 0;
+    private Shape selectedShape = null;
+    private Image image = null;
 
     public ModelImpl(ViewImpl view) {
         addObserver(view);
@@ -33,6 +34,14 @@ public class ModelImpl extends Observable {
 
     public Shape getSelectedShape() {
         return selectedShape;
+    }
+
+    public void setImage(Image image) {
+        this.image = image;
+    }
+
+    public Image getImage() {
+        return this.image;
     }
 
     public void addShape(Shape shape) {
