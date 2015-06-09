@@ -1,6 +1,7 @@
 package cs355;
 
 import java.awt.image.BufferedImage;
+import java.awt.image.Raster;
 import java.awt.image.WritableRaster;
 
 /**
@@ -54,6 +55,10 @@ public class Image {
         this.values = values;
     }
 
+    public int get(int i, int j) {
+        return values[i][j];
+    }
+
     public void detectEdges() {
 
     }
@@ -71,7 +76,11 @@ public class Image {
     }
 
     public void changeBrightness(int brightnessAmountNum) {
+        for(int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
+                final int newValue = Math.max(0, Math.min(255, values[i][j] + brightnessAmountNum));
+                values[i][j] = newValue;
+            }
+        }
     }
-
-//    public void
 }

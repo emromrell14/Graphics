@@ -177,109 +177,46 @@ public class ControllerImpl implements CS355Controller, MouseMotionListener, Mou
         }
     }
 
-    private void processKey(Integer key) {
-        switch(key) {
-            case (int) 'A':
-                moveX(true);
-                break;
-            case (int) 'D':
-                moveX(false);
-                break;
-            case (int) 'R':
-                moveY(false);
-                break;
-            case (int) 'F':
-                moveY(true);
-                break;
-            case (int) 'W':
-                moveZ(false);
-                break;
-            case (int) 'S':
-                moveZ(true);
-                break;
-            case (int) 'Q':
-                Helper.rotationAngle += Math.PI / 32;
-                break;
-            case (int) 'E':
-                Helper.rotationAngle -= Math.PI / 32;
-                break;
-        }
-        System.out.println("Camera: " + Helper.cameraLocation + ". Angle: " + Helper.rotationAngle);
-        model.updateScreen();
-    }
-
-    private void move(double deltaX, double deltaY, double deltaZ) {
-        Helper.cameraLocation.x += deltaX;
-        Helper.cameraLocation.y += deltaY;
-        Helper.cameraLocation.z += deltaZ;
-    }
-
-    private void moveX(boolean movingLeft) {
-        double deltaX = Math.cos(Helper.rotationAngle) * MOVEMENT;
-        double deltaZ = Math.sin(Helper.rotationAngle) * MOVEMENT;
-
-        if(movingLeft) {
-            deltaX *= -1;
-            deltaZ *= -1;
-        }
-
-        move(deltaX, 0, deltaZ);
-    }
-
-    private void moveY(boolean movingDown) {
-        double deltaY = MOVEMENT;
-        if(movingDown) {
-            deltaY *= -1;
-        }
-
-        move(0, deltaY, 0);
-    }
-
-    private void moveZ(boolean movingOut) {
-        double deltaX = -Math.sin(Helper.rotationAngle) * MOVEMENT;
-        double deltaZ = Math.cos(Helper.rotationAngle) * MOVEMENT;
-
-        if(movingOut) {
-            deltaX *= -1;
-            deltaZ *= -1;
-        }
-
-        move(deltaX, 0, deltaZ);
-    }
-
     @Override
     public void doEdgeDetection() {
         model.getImage().detectEdges();
+        model.updateScreen();
     }
 
     @Override
     public void doSharpen() {
         model.getImage().sharpen();
+        model.updateScreen();
     }
 
     @Override
     public void doMedianBlur() {
         model.getImage().blurMedian();
+        model.updateScreen();
     }
 
     @Override
     public void doUniformBlur() {
         model.getImage().blurUniform();
+        model.updateScreen();
     }
 
     @Override
     public void doChangeContrast(int contrastAmountNum) {
         model.getImage().changeContrast(contrastAmountNum);
+        model.updateScreen();
     }
 
     @Override
     public void doChangeBrightness(int brightnessAmountNum) {
         model.getImage().changeBrightness(brightnessAmountNum);
+        model.updateScreen();
     }
 
     @Override
     public void doLoadImage(BufferedImage openImage) {
         model.setImage(new Image(openImage));
+        model.updateScreen();
     }
 
     @Override
@@ -522,5 +459,75 @@ public class ControllerImpl implements CS355Controller, MouseMotionListener, Mou
         final Point2D newPoint = Helper.viewToWorld(point);
 
         model.moveSelectedLineEndpoint(whichHandle, newPoint);
+    }
+
+    private void processKey(Integer key) {
+        switch(key) {
+            case (int) 'A':
+                moveX(true);
+                break;
+            case (int) 'D':
+                moveX(false);
+                break;
+            case (int) 'R':
+                moveY(false);
+                break;
+            case (int) 'F':
+                moveY(true);
+                break;
+            case (int) 'W':
+                moveZ(false);
+                break;
+            case (int) 'S':
+                moveZ(true);
+                break;
+            case (int) 'Q':
+                Helper.rotationAngle += Math.PI / 32;
+                break;
+            case (int) 'E':
+                Helper.rotationAngle -= Math.PI / 32;
+                break;
+        }
+        System.out.println("Camera: " + Helper.cameraLocation + ". Angle: " + Helper.rotationAngle);
+        model.updateScreen();
+    }
+
+    private void move(double deltaX, double deltaY, double deltaZ) {
+        Helper.cameraLocation.x += deltaX;
+        Helper.cameraLocation.y += deltaY;
+        Helper.cameraLocation.z += deltaZ;
+    }
+
+    private void moveX(boolean movingLeft) {
+        double deltaX = Math.cos(Helper.rotationAngle) * MOVEMENT;
+        double deltaZ = Math.sin(Helper.rotationAngle) * MOVEMENT;
+
+        if(movingLeft) {
+            deltaX *= -1;
+            deltaZ *= -1;
+        }
+
+        move(deltaX, 0, deltaZ);
+    }
+
+    private void moveY(boolean movingDown) {
+        double deltaY = MOVEMENT;
+        if(movingDown) {
+            deltaY *= -1;
+        }
+
+        move(0, deltaY, 0);
+    }
+
+    private void moveZ(boolean movingOut) {
+        double deltaX = -Math.sin(Helper.rotationAngle) * MOVEMENT;
+        double deltaZ = Math.cos(Helper.rotationAngle) * MOVEMENT;
+
+        if(movingOut) {
+            deltaX *= -1;
+            deltaZ *= -1;
+        }
+
+        move(deltaX, 0, deltaZ);
     }
 }

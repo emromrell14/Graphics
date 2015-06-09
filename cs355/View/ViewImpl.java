@@ -1,16 +1,14 @@
 package cs355.View;
 
-import cs355.GUIFunctions;
-import cs355.Helper;
+import cs355.*;
 import cs355.Model.ModelImpl;
-import cs355.Renderer;
 import cs355.Shapes.*;
 import cs355.Shapes.Shape;
-import cs355.Vector2D;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
+import java.awt.image.BufferedImage;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -33,8 +31,17 @@ public class ViewImpl implements ViewRefresher, Observer {
     @Override
     public void refreshView(Graphics2D g2d) {
         //Draw image
-        if(Helper.drawImage && model.getImage() != null) {
-            g2d.drawImage(model.getImage().getImage(), 0, 0, null);
+        final Image image = model.getImage();
+        if(Helper.drawImage && image != null) {
+
+            final BufferedImage bufferedImage = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_BYTE_GRAY);
+            for(int i = 0; i < bufferedImage.getWidth(); i++) {
+                for(int j = 0; j < bufferedImage.getHeight(); j++) {
+                    bufferedImage.getRaster().setSample(i, j, 0, image.get(i, j));
+                }
+            }
+            g2d.setTransform(Helper.worldToView());
+            g2d.drawImage(bufferedImage, 1024 - bufferedImage.getWidth() / 2, 1024 - bufferedImage.getHeight() / 2, null);
         }
 
         //Draw all shapes
