@@ -2,6 +2,7 @@ package cs355.Controller;
 
 import cs355.GUIFunctions;
 import cs355.Helper;
+import cs355.Image;
 import cs355.Model.ModelImpl;
 import cs355.Shapes.*;
 import cs355.Shapes.Rectangle;
@@ -248,42 +249,47 @@ public class ControllerImpl implements CS355Controller, MouseMotionListener, Mou
 
     @Override
     public void doEdgeDetection() {
-
+        model.getImage().detectEdges();
     }
 
     @Override
     public void doSharpen() {
-
+        model.getImage().sharpen();
     }
 
     @Override
     public void doMedianBlur() {
-
+        model.getImage().blurMedian();
     }
 
     @Override
     public void doUniformBlur() {
-
+        model.getImage().blurUniform();
     }
 
     @Override
     public void doChangeContrast(int contrastAmountNum) {
-
+        model.getImage().changeContrast(contrastAmountNum);
     }
 
     @Override
     public void doChangeBrightness(int brightnessAmountNum) {
-
+        model.getImage().changeBrightness(brightnessAmountNum);
     }
 
     @Override
     public void doLoadImage(BufferedImage openImage) {
-
+        model.setImage(new Image(openImage));
     }
 
     @Override
     public void toggleBackgroundDisplay() {
-
+        if(Helper.drawImage) {
+            Helper.drawImage = false;
+        } else {
+            Helper.drawImage = true;
+        }
+        model.updateScreen();
     }
 
     @Override
