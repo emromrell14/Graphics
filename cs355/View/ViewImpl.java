@@ -9,6 +9,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
+import java.awt.image.WritableRaster;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -35,9 +36,11 @@ public class ViewImpl implements ViewRefresher, Observer {
         if(Helper.drawImage && image != null) {
 
             final BufferedImage bufferedImage = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_BYTE_GRAY);
+            final WritableRaster raster = bufferedImage.getRaster();
+
             for(int i = 0; i < bufferedImage.getWidth(); i++) {
                 for(int j = 0; j < bufferedImage.getHeight(); j++) {
-                    bufferedImage.getRaster().setSample(i, j, 0, image.get(i, j));
+                    raster.setSample(i, j, 0, image.get(i, j));
                 }
             }
             g2d.setTransform(Helper.worldToView());
